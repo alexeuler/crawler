@@ -20,11 +20,11 @@ task :console do
     retry unless retries > 20
   end
   begin
-    DB.checkout
     include Crawler::Models
     @api = Crawler::VkApi.new(socket: @socket)
     IRB.start
   ensure
-    DB.checkin
+    ActiveRecord::Base.clear_active_connections!
+    @api.close
   end
 end

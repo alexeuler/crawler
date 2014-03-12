@@ -3,7 +3,6 @@ require File.expand_path("../config/db", File.dirname(__FILE__))
 db_namespace=namespace :db do
 
   task :environment do
-    DB.checkout
     ActiveRecord::Migrator.migrations_paths=
         File.expand_path("../crawler/models/migrations", File.dirname(__FILE__))
   end
@@ -13,7 +12,7 @@ db_namespace=namespace :db do
     begin
       ActiveRecord::Tasks::DatabaseTasks.create_current
     ensure
-      DB.checkin
+      ActiveRecord::Base.clear_active_connections!
     end
   end
 
@@ -22,7 +21,7 @@ db_namespace=namespace :db do
     begin
       ActiveRecord::Tasks::DatabaseTasks.create_current
     ensure
-      DB.checkin
+      ActiveRecord::Base.clear_active_connections!
     end
   end
 
@@ -35,7 +34,7 @@ db_namespace=namespace :db do
       ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_paths)
       db_namespace['dump'].invoke
     ensure
-      DB.checkin
+      ActiveRecord::Base.clear_active_connections!
     end
   end
 
@@ -45,7 +44,7 @@ db_namespace=namespace :db do
       ActiveRecord::Migrator.rollback(ActiveRecord::Migrator.migrations_paths, 1)
       db_namespace['dump'].invoke
     ensure
-      DB.checkin
+      ActiveRecord::Base.clear_active_connections!
     end
   end
 
@@ -58,7 +57,7 @@ db_namespace=namespace :db do
       end
       db_namespace['dump'].reenable
     ensure
-      DB.checkin
+      ActiveRecord::Base.clear_active_connections!
     end
   end
 
@@ -74,7 +73,7 @@ db_namespace=namespace :db do
       file.puts("end")
       file.close
     ensure
-      DB.checkin
+      ActiveRecord::Base.clear_active_connections!
     end
   end
 end

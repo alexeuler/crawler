@@ -8,12 +8,3 @@ ActiveRecord::Base.establish_connection(
     reaping_frequency: 10,
     pool: 5
 )
-
-module DB
-  def self.checkout
-
-  end
-
-  def self.checkin
-  end
-end
