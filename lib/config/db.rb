@@ -1,10 +1,10 @@
 require 'active_record'
 ActiveRecord::Base.establish_connection(
-    adapter: 'postgresql',
-    host: 'localhost',
-    database: 'crawler',
-    username: ENV['PG_USER'],
-    password: ENV['PG_PASS'],
+    adapter: App.config.db.adapter,
+    host: App.config.db.host,
+    database: App.config.db.name,
+    username: App.config.db.user,
+    password: App.config.db.password,
     reaping_frequency: 10,
     pool: 5
 )
