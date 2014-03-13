@@ -1,18 +1,45 @@
 db_namespace=namespace :db do
 
+  def establish_master_connection
+    ActiveRecord::Base.clear_active_connections!
+    ActiveRecord::Base.establish_connection adapter: App.config.db.adapter,
+                                            host: App.config.db.host,
+                                            database: "postgres",
+                                            username: App.config.db.user,
+                                            password: App.config.db.password,
+                                            'schema_search_path' => 'public'
+  end
+
+  def establish_db_connection
+    ActiveRecord::Base.clear_active_connections!
+    ActiveRecord::Base.establish_connection(
+        adapter: App.config.db.adapter,
+        host: App.config.db.host,
+        database: App.config.db.name,
+        username: App.config.db.user,
+        password: App.config.db.password,
+        reaping_frequency: 10,
+        pool: 5
+    )
+  end
+
+
   task :environment do
+    establish_db_connection
     ActiveRecord::Migrator.migrations_paths=
         File.expand_path("../crawler/models/migrations", File.dirname(__FILE__))
   end
 
   desc "create database"
-  task :create => :environment do
-    ActiveRecord::Tasks::DatabaseTasks.create_current
+  task :create do
+    establish_master_connection
+    ActiveRecord::Base.connection.create_database App::config.db.name
   end
 
   desc "drop database"
-  task :drop => :environment do
-    ActiveRecord::Tasks::DatabaseTasks.create_current
+  task :drop do
+    establish_master_connection
+    ActiveRecord::Base.connection.drop_database App::config.db.name
   end
 
   desc "reset database"

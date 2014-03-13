@@ -21,7 +21,6 @@ task :console do
     @api = Crawler::VkApi.new(socket: @socket)
     IRB.start
   ensure
-    ActiveRecord::Base.clear_active_connections!
     @api.close
   end
 end
