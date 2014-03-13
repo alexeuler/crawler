@@ -1,7 +1,4 @@
 require_relative '../../lib/crawler/vk_api'
-require_relative '../../lib/config/config'
-require_relative '../../lib/config/db'
-require_relative '../../lib/config/helpers'
 Helpers.require_dir(File.expand_path("../crawler/models",
                                      File.dirname(__FILE__)))
 require 'socket'
