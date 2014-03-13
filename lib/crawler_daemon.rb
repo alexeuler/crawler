@@ -1,13 +1,14 @@
 require 'daemons'
-require_relative "bot"
-dir = File.expand_path("../../", File.dirname(__FILE__))
+
+
+dir = File.expand_path("../", File.dirname(__FILE__))
 
 Daemons.run_proc('bot_daemon', {
     dir_mode: :normal,
     dir: "#{dir}/log",
-    backtrace: true,
+    backtrabce: true,
     monitor: true,
     log_output: true
 }) do
-  Bot.start
+  require_relative "crawler"
 end
