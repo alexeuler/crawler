@@ -1,9 +1,4 @@
-require_relative "../config/helpers"
 require_relative "spider"
-path = File.expand_path("models", __dir__)
-Helpers.require_dir(path)
-include Crawler
-include Crawler::Models
 
 module Crawler
   class Bot
