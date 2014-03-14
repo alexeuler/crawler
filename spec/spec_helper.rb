@@ -6,18 +6,28 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 #Celluloid.logger=nil
 
-module Helpers
-  def socket_pair
-    Socket.socketpair(:UNIX, :DGRAM, 0)
-  end
-end
 
-require File.dirname(__FILE__) + "/factories"
+require "active_record"
+ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
+load "crawler/models/migrations/schema.rb"
+
+require_relative "helpers"
+require 'factory_girl'
+Helpers::require_dir File.dirname(__FILE__) + "/factories"
+
 RSpec.configure do |config|
   config.include Helpers
   config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true
   config.filter_run :focus
+
+  config.around do |example|
+    ActiveRecord::Base.transaction do
+      example.run
+      raise ActiveRecord::Rollback
+    end
+  end
+
 
   # Run specs in random order to surface order dependencies. If you find an
   # order dependency and want to debug it, you can fix the order by providing

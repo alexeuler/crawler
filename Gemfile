@@ -13,3 +13,4 @@ gem "activesupport"
 gem "activerecord"
 gem "factory_girl"
 gem "pg"
+gem "sqlite3" #for tests
