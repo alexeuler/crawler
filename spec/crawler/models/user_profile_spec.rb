@@ -12,14 +12,11 @@ module Crawler
         end
 
         it 'fetches user profile from vk and returns user_profile_model' do
-          expected = FactoryGirl.create(:user_profile_zolin)
+          expected = FactoryGirl.build(:user_profile_zolin)
           api = Thread.current[:api]
-          api.stub(:users_get) do
-            VkResponses::user_profile_zolin
-          end
+          api.stub(:users_get).and_return VkResponses::user_profile_zolin
           actual = UserProfile.fetch(1)
-          actual.id = expected.id
-          actual.should == expected
+          actual.attributes.should == expected.attributes
         end
       end
 

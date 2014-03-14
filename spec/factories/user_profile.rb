@@ -16,7 +16,7 @@ FactoryGirl.define do
       vk_id 20
       first_name "Sergey"
       last_name "Zolin"
-      photo "http//cs315126.vk.me/u20/e_sa5c7sdfb1.jpg"
+      photo "http://cs315126.vk.me/u20/e_sa5c7sdfb1.jpg"
       sex 2
       birthday Date.new(1987, 2, 28)
       university 2
