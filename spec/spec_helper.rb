@@ -13,6 +13,8 @@ load "crawler/models/migrations/schema.rb"
 
 require_relative "helpers"
 require 'factory_girl'
+Helpers::require_dir File.expand_path("../lib/crawler/models", File.dirname(__FILE__))
+include Crawler::Models
 Helpers::require_dir File.dirname(__FILE__) + "/factories"
 
 RSpec.configure do |config|
@@ -21,6 +23,7 @@ RSpec.configure do |config|
   config.run_all_when_everything_filtered = true
   config.filter_run :focus
 
+  config.include FactoryGirl::Syntax::Methods
   config.around do |example|
     ActiveRecord::Base.transaction do
       example.run
