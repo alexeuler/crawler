@@ -19,14 +19,9 @@ module Crawler
 
       def self.load_or_fetch(id)
         fetched = Post.fetch(id)
-        existing = Post.where(owner_id: id).to_a
-        existing_ids = existing.map(&:vk_id)
-        fetched.delete_if do |model|
-          existing_ids.include? model.vk_id
-        end
-        fetched.each do |model|
-          model.save
-        end
+        existing_ids = Post.where(owner_id: id).select(:vk_id).to_a
+        fetched.delete_if { |model| existing_ids.include? model.vk_id}
+        fetched.each {|model|  model.save }
         fetched + existing
       end
 

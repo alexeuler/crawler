@@ -31,6 +31,19 @@ module Crawler
         models.count == 1 ? models[0] : models
       end
 
+      def load_or_fetch(id)
+        fetched = Post.fetch(id)
+        existing = Post.where(owner_id: id).to_a
+        existing_ids = existing.map(&:vk_id)
+        fetched.delete_if do |model|
+          existing_ids.include? model.vk_id
+        end
+        fetched.each do |model|
+          model.save
+        end
+        fetched + existing
+      end
+
       # This method is called in class definition
       # method is api method
       # args_id_names is the name of parameter for request with id
