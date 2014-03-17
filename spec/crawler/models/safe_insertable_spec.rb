@@ -26,20 +26,24 @@ module Crawler
         it "inserts models which are not already in db (with respect to unique_id)" do
           models = []
           5.times { models << FactoryGirl.create(:user_profile) }
-          4.times {models << FactoryGirl.build(:user_profile)}
+          4.times { models << FactoryGirl.build(:user_profile) }
           UserProfile.count.should == 5
+          (5..8).each { |i| models[i].should_receive(:save).and_call_original }
+          (0..4).each { |i| models[i].should_not_receive :save }
           UserProfile.insert(models)
           UserProfile.all.to_a.map(&:vk_id).should == (1..9).to_a
 
           models = []
           5.times { models << FactoryGirl.create(:post) }
-          4.times {models << FactoryGirl.build(:post)}
+          4.times { models << FactoryGirl.build(:post) }
           Post.count.should == 5
+          (5..8).each { |i| models[i].should_receive(:save).and_call_original }
+          (0..4).each { |i| models[i].should_not_receive :save }
           Post.insert(models)
           ids = Post.all.to_a.map do |post|
             [post.owner_id, post.vk_id]
           end
-          ids.should == [[1,1],[1,2],[1,3],[2,1],[2,2],[2,3],[3,1],[3,2],[3,3]]
+          ids.should == [[1, 1], [1, 2], [1, 3], [2, 1], [2, 2], [2, 3], [3, 1], [3, 2], [3, 3]]
         end
       end
 
