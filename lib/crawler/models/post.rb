@@ -29,9 +29,9 @@ module Crawler
         log "Likes Fetch: fetching likes"
         user_ids=Like.fetch([vk_id, owner_id]).map(&:user_profile_id)
         log "Likes Fetch: loading or fetching #{user_ids.count} users"
-        users1 = UserProfile.load_or_fetch(user_ids)
+        users = UserProfile.load_or_fetch(user_ids)
         log "Likes Fetch: Mass inserting #{users1.count} fetched users"
-        users2 = UserProfile.mass_insert(users1)
+        users_in_db = UserProfile.insert(users)
         log "Likes Fetch: Mass inserting #{users2.count} likes"
         Like.mass_insert(users2.map(&:id), self.id)
         users2

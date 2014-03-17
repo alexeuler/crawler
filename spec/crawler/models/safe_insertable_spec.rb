@@ -30,7 +30,10 @@ module Crawler
           UserProfile.count.should == 5
           (5..8).each { |i| models[i].should_receive(:save).and_call_original }
           (0..4).each { |i| models[i].should_not_receive :save }
-          UserProfile.insert(models)
+
+          actual=UserProfile.insert(models)
+          expected=UserProfile.all.load
+          actual.should == expected
           UserProfile.all.to_a.map(&:vk_id).should == (1..9).to_a
 
           models = []
@@ -39,7 +42,9 @@ module Crawler
           Post.count.should == 5
           (5..8).each { |i| models[i].should_receive(:save).and_call_original }
           (0..4).each { |i| models[i].should_not_receive :save }
-          Post.insert(models)
+          actual = Post.insert(models)
+          expected = Post.all.load
+          actual.should == expected
           ids = Post.all.to_a.map do |post|
             [post.owner_id, post.vk_id]
           end
