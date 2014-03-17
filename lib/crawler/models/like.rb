@@ -1,3 +1,6 @@
+require_relative "fetchable"
+require_relative "safe_insertable"
+
 module Crawler
   module Models
     class Like < ActiveRecord::Base
@@ -6,24 +9,13 @@ module Crawler
       extend Fetchable
       fetcher :likes_getList, [:item_id, :owner_id], Mapping.like
 
+      extend SafeInsertable
+      unique_id [:post_id, :user_profile_id]
+
+      validates_uniqueness_of :post_id, scope: :user_profile_id
+
       belongs_to :user_profile
       belongs_to :post
-
-      @@mutex = Mutex.new
-
-      def self.mass_insert(uids, post_id)
-        @@mutex.lock
-        in_db = self.where(post_id: post_id).where(user_profile_id: uids).to_a
-        uids_to_db = uids - in_db.map(&:user_profile_id)
-        to_db = []
-        ActiveRecord::Base.transaction do
-          uids_to_db.each do |uid|
-            to_db << self.create(user_profile_id: uid, post_id: post_id)
-          end
-        end
-        @@mutex.unlock
-        in_db + to_db
-      end
 
     end
   end
