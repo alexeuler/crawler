@@ -1,3 +1,4 @@
+require_relative "safe_insertable"
 require_relative "fetchable"
 require_relative "mapping"
 require_relative "../logging"
@@ -11,6 +12,9 @@ module Crawler
       extend Fetchable
       fetcher :users_get, :uids, Mapping.user_profile
       MAX_PROFILES_PER_FETCH = 100
+
+      extend SafeInsertable
+      unique_id :vk_id
 
       validates_uniqueness_of :vk_id
 

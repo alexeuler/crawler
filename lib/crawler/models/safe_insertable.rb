@@ -13,7 +13,10 @@ module Crawler
       end
 
       def insert(models)
+        return if models.nil?
         models = models.is_a?(Array) ? models : [models]
+        models.compact!
+        return if models == []
         mutex.synchronize do
           to_save = models.select { |model| model.id.nil? }
           in_db = fetch_existing_from_db(to_save)
