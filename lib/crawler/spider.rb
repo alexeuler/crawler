@@ -21,30 +21,20 @@ module Crawler
 
     def start
       connection = ActiveRecord::Base.connection
+      @api = VkApi.new
       Thread.current[:number] = @number
       begin
         while @active
-          @api = VkApi.new
           user = get_job
           break if user.nil?
-          log "Spider: fetching wall posts"
           posts = Post.fetch(user.vk_id)
-          log "Spider: In-memory posts processing"
           posts = posts.is_a?(Array) ? posts : [posts]
           posts = posts.select { |x| x.likes_count >= MIN_LIKES }
-          log "Spider: Saving #{posts.count} posts"
-          ActiveRecord::Base.transaction do
-            posts.each do |post|
-              post.save
-            end
-          end
-          log "Spider: Fetching likes"
-          posts.each do |post|
+          posts_in_db = Post.insert(posts)
+          posts_in_db.each do |post|
             post.fetch_likes
           end
-          log "Spider: Fetching friends"
           user.fetch_friends
-          log "Spider: Updating user status"
           user.status = 1
           user.save
         end

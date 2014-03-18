@@ -1,6 +1,10 @@
+require_relative "../logging"
+
 module Crawler
   module Models
     module SafeInsertable
+
+      include Logging
 
       attr_accessor :mutex
 
@@ -13,10 +17,10 @@ module Crawler
       end
 
       def insert(models)
-        return if models.nil?
+        return [] if models.nil?
         models = models.is_a?(Array) ? models : [models]
         models.compact!
-        return if models == []
+        return [] if models == []
         to_save = models.select { |model| model.id.nil? }
         return models if to_save.count == 0
         mutex.synchronize do
@@ -31,6 +35,7 @@ module Crawler
 
       private
       def insert_to_db(models)
+        log "Saving #{models.count} #{models[0].class.name.split("::").last}s"
         sql = "INSERT INTO #{self.table_name} "
         attr_names = models[0].attributes.keys
         attr_names.delete("id")
