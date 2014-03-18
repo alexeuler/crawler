@@ -17,8 +17,9 @@ module Crawler
         models = models.is_a?(Array) ? models : [models]
         models.compact!
         return if models == []
+        to_save = models.select { |model| model.id.nil? }
+        return models if to_save.count == 0
         mutex.synchronize do
-          to_save = models.select { |model| model.id.nil? }
           in_db = fetch_existing_from_db(to_save)
           in_db_ids = in_db.map { |model| model_ids(model) }
           to_db = to_save.select { |model| not in_db_ids.include?(model_ids(model)) }
@@ -32,10 +33,15 @@ module Crawler
       def insert_to_db(models)
         sql = "INSERT INTO #{self.table_name} "
         attr_names = models[0].attributes.keys
-        sql += "('#{attr_names.join("','")}') "
+        attr_names.delete("id")
+        sql += "(#{attr_names.join(",")}) "
         sql += "VALUES "
         values = models.map do |model|
-          vals = model.attributes.values.map {|val| val.nil? ? "NULL" : val}
+          vals = []
+          model.attributes.each_pair do |key, value|
+            vals << value unless key == "id"
+          end
+          vals = vals.map { |val| val.nil? ? "NULL" : "'#{val}'" }
           "(#{vals.join(",")})"
         end
         sql += values.join(", ")
@@ -43,7 +49,7 @@ module Crawler
       end
 
       def fetch_existing_from_db(models)
-        ids = models.map { |model| model_ids(model).join("_")}
+        ids = models.map { |model| model_ids(model).join("_") }
         ids = ids.join("','")
         id_names = @unique_id_symbols.join(" || '_' || ")
         self.where("#{id_names} IN ('#{ids}')").to_a
