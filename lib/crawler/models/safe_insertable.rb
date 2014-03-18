@@ -37,11 +37,6 @@ module Crawler
         end
         sql += values.join(", ")
         ActiveRecord::Base.connection.execute sql
-        #ActiveRecord::Base.transaction do
-        #  models.each do |u|
-        #    u.save
-        #  end
-        #end
       end
 
       def fetch_existing_from_db(models)

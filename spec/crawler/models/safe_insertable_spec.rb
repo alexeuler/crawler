@@ -28,8 +28,6 @@ module Crawler
           5.times { models << FactoryGirl.create(:user_profile) }
           4.times { models << FactoryGirl.build(:user_profile) }
           UserProfile.count.should == 5
-          (5..8).each { |i| models[i].should_receive(:save).and_call_original }
-          (0..4).each { |i| models[i].should_not_receive :save }
 
           actual=UserProfile.insert(models)
           expected=UserProfile.all.load
@@ -40,8 +38,6 @@ module Crawler
           5.times { models << FactoryGirl.create(:post) }
           4.times { models << FactoryGirl.build(:post) }
           Post.count.should == 5
-          (5..8).each { |i| models[i].should_receive(:save).and_call_original }
-          (0..4).each { |i| models[i].should_not_receive :save }
           actual = Post.insert(models)
           expected = Post.all.load
           actual.should == expected
