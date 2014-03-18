@@ -23,8 +23,6 @@ module Crawler
       has_many :likes
       has_many :likes_posts, through: :likes, source: "post"
 
-      @@mutex = Mutex.new
-
       def friends
         primary_friends + inverse_friends
       end
@@ -44,34 +42,13 @@ module Crawler
       end
 
       def fetch_friends
-        log "Fetch Friends: Fetching friend ids"
         ids = Friendship.fetch(vk_id).map(&:user_profile_id)
-        log "Fetch Friends: Load or fetch #{ids.count} user profiles"
         users = self.class.load_or_fetch(ids)
         users -= inverse_friends
-        log "Fetch Friends: Mass insert #{users.count} users"
-        users = self.class.mass_insert(users)
-        log "Fetch Friends: Mass insert #{users.count} friendships"
-        Friendship.mass_insert_primary(users.map(&:id), self.id)
-        users
-      end
-
-      def self.mass_insert(users)
-        @@mutex.lock
-        users_to_save = users.select { |u| u.id.nil? }
-        ids = users_to_save.map(&:vk_id)
-        users_in_db = self.where(vk_id: ids).to_a
-        users_in_db_ids = users_in_db.map(&:vk_id)
-        users_to_db = users_to_save.map { |u| users_in_db_ids.include?(u.vk_id) ? nil : u }
-        users_to_db.compact!
-        ActiveRecord::Base.transaction do
-          users_to_db.each do |u|
-            u.save
-          end
-        end
-        @@mutex.unlock
-        result = users - users_to_save + users_in_db + users_to_db
-        result
+        inserted_users = self.class.insert(users)
+        friendships = inserted_users.map { |user| Friendship.new user_profile_id: self.id, friend_id: user.id}
+        Friendship.insert(friendships)
+        inserted_users
       end
 
     end
