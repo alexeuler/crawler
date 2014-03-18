@@ -1,3 +1,4 @@
+require_relative "safe_insertable"
 require_relative "fetchable"
 require_relative "mapping"
 require_relative "../logging"
@@ -11,6 +12,9 @@ module Crawler
       extend Fetchable
       fetcher :wall_get, :owner_id, Mapping.post
 
+      extend SafeInsertable
+      unique_id [:vk_id, :owner_id]
+
       validates_uniqueness_of :vk_id, scope: :owner_id
 
       belongs_to :user_profile, primary_key: "vk_id", foreign_key: "owner_id"
@@ -19,10 +23,11 @@ module Crawler
 
       def self.load_or_fetch(id)
         fetched = Post.fetch(id)
-        existing_ids = Post.where(owner_id: id).select(:vk_id).to_a
-        fetched.delete_if { |model| existing_ids.include? model.vk_id}
-        fetched.each {|model|  model.save }
-        fetched + existing
+        in_db = Post.where(owner_id: id).to_a
+        in_db_ids = in_db.map(&:vk_id)
+        fetched.delete_if { |model| in_db_ids.include? model.vk_id}
+        to_db = self.insert(fetched)
+        in_db + to_db
       end
 
       def fetch_likes
