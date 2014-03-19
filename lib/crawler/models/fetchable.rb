@@ -1,9 +1,12 @@
+require_relative "../logging"
+
 module Crawler
   module Models
     module Fetchable
       class FetchingError < RuntimeError
       end
 
+      include Logging
       attr_accessor :fetcher_mapping, :fetcher_lambda
 
       # This is the method for retrieving data from vk
@@ -13,6 +16,7 @@ module Crawler
       # The extraction function is in Mapping model - single for one element
       # request, muliple for multiple element request
       def fetch(id)
+        log "Fetching #{self.name.split("::").last}s"
         return if id == [] or id.nil?
         type = (id.is_a?(Array) and not @compound_id) ? :multiple : :single
 
@@ -29,19 +33,6 @@ module Crawler
           models << fetcher_model
         end
         models.count == 1 ? models[0] : models
-      end
-
-      def load_or_fetch(id)
-        fetched = Post.fetch(id)
-        existing = Post.where(owner_id: id).to_a
-        existing_ids = existing.map(&:vk_id)
-        fetched.delete_if do |model|
-          existing_ids.include? model.vk_id
-        end
-        fetched.each do |model|
-          model.save
-        end
-        fetched + existing
       end
 
       # This method is called in class definition

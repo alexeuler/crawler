@@ -17,6 +17,7 @@ module Crawler
       end
 
       def insert(models)
+        log "Insert preprocessing #{models.count} #{models[0].class.name.split("::").last}s"
         return [] if models.nil?
         models = models.is_a?(Array) ? models : [models]
         models.compact!
@@ -35,7 +36,7 @@ module Crawler
 
       private
       def insert_to_db(models)
-        log "Saving #{models.count} #{models[0].class.name.split("::").last}s"
+        log "Inserting #{models.count} #{models[0].class.name.split("::").last}s"
         sql = "INSERT INTO #{self.table_name} "
         attr_names = models[0].attributes.keys
         attr_names.delete("id")
