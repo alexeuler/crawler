@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140303004702) do
+ActiveRecord::Schema.define(version: 20140323140544) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,8 @@ ActiveRecord::Schema.define(version: 20140303004702) do
     t.integer  "copy_post_id"
   end
 
+  add_index "posts", ["owner_id", "vk_id"], name: "owner_id_and_vk_id_uniq", unique: true, using: :btree
+
   create_table "user_profiles", force: true do |t|
     t.integer  "vk_id",                            null: false
     t.string   "first_name"
@@ -75,5 +77,7 @@ ActiveRecord::Schema.define(version: 20140303004702) do
     t.integer  "followers_count"
     t.integer  "status",               default: 0
   end
+
+  add_index "user_profiles", ["vk_id"], name: "vk_id_uniq", unique: true, using: :btree
 
 end
