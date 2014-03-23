@@ -26,7 +26,7 @@ module Crawler
       begin
         while @active
           user = get_job
-          break if user.nil?
+          next if user.nil?
           posts = Post.fetch(user.vk_id)
           posts = posts.is_a?(Array) ? posts : [posts]
           posts = posts.select { |x| x.likes_count >= MIN_LIKES }
@@ -48,10 +48,14 @@ module Crawler
     private
 
     def get_job
-      return nil if UserProfile.where(status: 1).count > JOB_SIZE
+      if UserProfile.where(status: 1).count > JOB_SIZE
+        @active = false
+        return nil
+      end
       user = nil
       @@mutex.synchronize do
         user = UserProfile.where(status: 0).first
+        return nil if user.nil?
         user.status = 2
         user.save
       end
