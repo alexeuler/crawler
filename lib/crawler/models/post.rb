@@ -18,7 +18,7 @@ module Crawler
       validates_uniqueness_of :vk_id, scope: :owner_id
 
       belongs_to :user_profile, primary_key: "vk_id", foreign_key: "owner_id"
-      has_many :likes
+      has_many :likes, dependent: :destroy
       has_many :likes_user_profiles, through: :likes, source: "user_profile"
 
       def self.load_or_fetch(id)
