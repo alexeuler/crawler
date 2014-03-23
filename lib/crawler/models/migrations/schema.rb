@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140323140544) do
+ActiveRecord::Schema.define(version: 20140323141551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,12 +21,16 @@ ActiveRecord::Schema.define(version: 20140323140544) do
     t.integer "friend_id"
   end
 
+  add_index "friendships", ["user_profile_id", "friend_id"], name: "primary_friend_uniq", unique: true, using: :btree
+
   create_table "likes", force: true do |t|
     t.integer  "post_id",         null: false
     t.integer  "user_profile_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "likes", ["post_id", "user_profile_id"], name: "post_user_uniq", unique: true, using: :btree
 
   create_table "posts", force: true do |t|
     t.integer  "vk_id",                           null: false
