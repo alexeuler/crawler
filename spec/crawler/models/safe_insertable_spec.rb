@@ -14,6 +14,9 @@ module Crawler
   module Models
 
     describe SafeInsertable do
+      before :each do
+        FactoryGirl.reload
+      end
 
       describe "::unique_id" do
         it "specifies unique_id symbol for insert method" do
