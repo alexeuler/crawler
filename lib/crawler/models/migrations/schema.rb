@@ -21,7 +21,8 @@ ActiveRecord::Schema.define(version: 20140323232449) do
     t.integer "friend_id"
   end
 
-  add_index "friendships", ["user_profile_id", "friend_id"], name: "friendships_user_profile_id_friend_id_idx", unique: true, using: :btree
+  add_index "friendships", ["friend_id"], name: "friendships_friend_id_idx", unique: true, using: :btree
+  add_index "friendships", ["user_profile_id"], name: "friendships_user_profile_id_idx", unique: true, using: :btree
 
   create_table "likes", force: true do |t|
     t.integer  "post_id",         null: false
@@ -30,7 +31,8 @@ ActiveRecord::Schema.define(version: 20140323232449) do
     t.datetime "updated_at"
   end
 
-  add_index "likes", ["post_id", "user_profile_id"], name: "likes_post_id_user_profile_id_idx", unique: true, using: :btree
+  add_index "likes", ["post_id"], name: "likes_post_id_idx", unique: true, using: :btree
+  add_index "likes", ["user_profile_id"], name: "likes_user_profile_id_idx", unique: true, using: :btree
 
   create_table "posts", force: true do |t|
     t.integer  "vk_id",                           null: false
