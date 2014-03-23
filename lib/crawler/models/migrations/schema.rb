@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140323141551) do
+ActiveRecord::Schema.define(version: 20140323232449) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20140323141551) do
     t.integer "friend_id"
   end
 
-  add_index "friendships", ["user_profile_id", "friend_id"], name: "primary_friend_uniq", unique: true, using: :btree
+  add_index "friendships", ["user_profile_id", "friend_id"], name: "friendships_user_profile_id_friend_id_idx", unique: true, using: :btree
 
   create_table "likes", force: true do |t|
     t.integer  "post_id",         null: false
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 20140323141551) do
     t.datetime "updated_at"
   end
 
-  add_index "likes", ["post_id", "user_profile_id"], name: "post_user_uniq", unique: true, using: :btree
+  add_index "likes", ["post_id", "user_profile_id"], name: "likes_post_id_user_profile_id_idx", unique: true, using: :btree
 
   create_table "posts", force: true do |t|
     t.integer  "vk_id",                           null: false
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 20140323141551) do
     t.integer  "copy_post_id"
   end
 
-  add_index "posts", ["owner_id", "vk_id"], name: "owner_id_and_vk_id_uniq", unique: true, using: :btree
+  add_index "posts", ["owner_id", "vk_id"], name: "posts_owner_id_vk_id_idx", unique: true, using: :btree
 
   create_table "user_profiles", force: true do |t|
     t.integer  "vk_id",                            null: false
@@ -82,6 +82,6 @@ ActiveRecord::Schema.define(version: 20140323141551) do
     t.integer  "status",               default: 0
   end
 
-  add_index "user_profiles", ["vk_id"], name: "vk_id_uniq", unique: true, using: :btree
+  add_index "user_profiles", ["vk_id"], name: "user_profiles_vk_id_idx", unique: true, using: :btree
 
 end
