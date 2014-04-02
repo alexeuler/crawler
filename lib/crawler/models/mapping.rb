@@ -10,7 +10,7 @@ module Crawler
             single: lambda { |x| x },
             multiple: lambda { |x| x },
             args: {
-                fields: "uid, bdate"
+                fields: "uid,bdate"
             }
         }
       end
