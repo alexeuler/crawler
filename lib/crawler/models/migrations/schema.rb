@@ -39,8 +39,9 @@ ActiveRecord::Schema.define(version: 20140303002635) do
   end
 
   create_table "user_profiles", force: true do |t|
-    t.integer "vk_id",              null: false
-    t.integer "status", default: 0
+    t.integer "vk_id",                null: false
+    t.integer "status",   default: 0
+    t.date    "birthday"
   end
 
 end
