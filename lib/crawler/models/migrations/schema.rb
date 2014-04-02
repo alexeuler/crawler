@@ -11,30 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140324002548) do
+ActiveRecord::Schema.define(version: 20140303002635) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "friendships", force: true do |t|
-    t.integer "user_profile_id"
-    t.integer "friend_id"
-  end
-
-  add_index "friendships", ["friend_id", "user_profile_id"], name: "friendships_friend_id_user_profile_id_key", unique: true, using: :btree
-  add_index "friendships", ["friend_id"], name: "friendships_friend_id_idx", using: :btree
-  add_index "friendships", ["user_profile_id"], name: "friendships_user_profile_id_idx", using: :btree
-
-  create_table "likes", force: true do |t|
-    t.integer  "post_id",         null: false
-    t.integer  "user_profile_id", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "likes", ["post_id", "user_profile_id"], name: "likes_post_id_user_profile_id_key", unique: true, using: :btree
-  add_index "likes", ["post_id"], name: "likes_post_id_idx", using: :btree
-  add_index "likes", ["user_profile_id"], name: "likes_user_profile_id_idx", using: :btree
 
   create_table "posts", force: true do |t|
     t.integer  "vk_id",                           null: false
@@ -54,38 +34,13 @@ ActiveRecord::Schema.define(version: 20140324002548) do
     t.integer  "date"
     t.integer  "copy_owner_id"
     t.integer  "copy_post_id"
+    t.float    "likes_age"
+    t.float    "likes_share"
   end
-
-  add_index "posts", ["owner_id", "vk_id"], name: "posts_owner_id_vk_id_idx", unique: true, using: :btree
 
   create_table "user_profiles", force: true do |t|
-    t.integer  "vk_id",                            null: false
-    t.string   "first_name"
-    t.string   "last_name"
-    t.integer  "access_mask",          default: 0
-    t.string   "photo"
-    t.integer  "sex"
-    t.date     "birthday"
-    t.integer  "university"
-    t.integer  "faculty"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "city"
-    t.integer  "country"
-    t.integer  "has_mobile"
-    t.integer  "albums_count"
-    t.integer  "videos_count"
-    t.integer  "audios_count"
-    t.integer  "notes_count"
-    t.integer  "photos_count"
-    t.integer  "groups_count"
-    t.integer  "friends_count"
-    t.integer  "online_friends_count"
-    t.integer  "user_videos_count"
-    t.integer  "followers_count"
-    t.integer  "status",               default: 0
+    t.integer "vk_id",              null: false
+    t.integer "status", default: 0
   end
-
-  add_index "user_profiles", ["vk_id"], name: "user_profiles_vk_id_idx", unique: true, using: :btree
 
 end
