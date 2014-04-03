@@ -6,11 +6,14 @@ module Crawler
             item: {
                 uid: :vk_id,
                 bdate: :birthday,
+                counters: {
+                    friends: :friends_count
+                }
             },
             single: lambda { |x| x },
             multiple: lambda { |x| x },
             args: {
-                fields: "uid,bdate"
+                fields: "uid,bdate,counters"
             }
         }
       end

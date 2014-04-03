@@ -18,7 +18,7 @@ class CreatePost < ActiveRecord::Migration
       t.integer "date"
       t.integer "copy_owner_id"
       t.integer "copy_post_id"
-      t.float "likes_age"
+      t.integer "likes_age"
       t.float "likes_share"
     end
   end

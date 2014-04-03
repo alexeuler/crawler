@@ -44,13 +44,14 @@ ActiveRecord::Schema.define(version: 20140403002112) do
     t.integer  "date"
     t.integer  "copy_owner_id"
     t.integer  "copy_post_id"
-    t.float    "likes_age"
+    t.integer  "likes_age"
     t.float    "likes_share"
   end
 
   create_table "user_profiles", force: true do |t|
-    t.integer "vk_id",                null: false
-    t.integer "status",   default: 0
+    t.integer "vk_id",                     null: false
+    t.integer "status",        default: 0
+    t.integer "friends_count"
     t.date    "birthday"
   end
 
