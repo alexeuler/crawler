@@ -37,6 +37,7 @@ module Crawler
             birthdays = users.map(&:birthday)
             birthdays.compact!
             birthdays.map! {|b| b.to_time.to_f}
+            post.closed_profiles_share = birthdays.count.to_f / users.count if users.count > 0
             if birthdays.count > 0
               sum = birthdays.inject(0.0) {|sum, x| sum+=x}
               post.likes_age =Time.at(sum / birthdays.count).year

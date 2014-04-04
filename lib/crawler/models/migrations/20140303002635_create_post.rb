@@ -20,7 +20,7 @@ class CreatePost < ActiveRecord::Migration
       t.integer "likes_count", default: 0
       t.integer "likes_age"
       t.float "likes_share"
-      t.float "closed_profiles"
+      t.float "closed_profiles_share"
     end
   end
 end
