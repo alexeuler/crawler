@@ -4,6 +4,7 @@ class CreateUserProfile < ActiveRecord::Migration
       t.integer "vk_id", null: false
       t.integer "status", default: 0
       t.integer "friends_count"
+      t.timestamps
       t.date "birthday"
     end
   end

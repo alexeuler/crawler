@@ -34,8 +34,6 @@ ActiveRecord::Schema.define(version: 20140403002112) do
     t.string   "attachment_image"
     t.text     "attachment_text"
     t.string   "attachment_url"
-    t.integer  "likes_count",         default: 0
-    t.integer  "reposts_count",       default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "attachment_id"
@@ -44,15 +42,21 @@ ActiveRecord::Schema.define(version: 20140403002112) do
     t.integer  "date"
     t.integer  "copy_owner_id"
     t.integer  "copy_post_id"
+    t.integer  "reposts_count",       default: 0
+    t.integer  "comments_count",      default: 0
+    t.integer  "likes_count",         default: 0
     t.integer  "likes_age"
     t.float    "likes_share"
+    t.float    "closed_profiles"
   end
 
   create_table "user_profiles", force: true do |t|
-    t.integer "vk_id",                     null: false
-    t.integer "status",        default: 0
-    t.integer "friends_count"
-    t.date    "birthday"
+    t.integer  "vk_id",                     null: false
+    t.integer  "status",        default: 0
+    t.integer  "friends_count"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.date     "birthday"
   end
 
 end

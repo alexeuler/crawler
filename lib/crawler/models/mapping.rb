@@ -33,6 +33,9 @@ module Crawler
                 reposts: {
                     count: :reposts_count
                 },
+                comments: {
+                    count: :comments_count
+                },
                 attachment: {
                     type: :attachment_type,
                     video: {

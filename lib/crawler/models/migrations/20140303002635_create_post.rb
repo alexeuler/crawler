@@ -8,18 +8,19 @@ class CreatePost < ActiveRecord::Migration
       t.string "attachment_image"
       t.text "attachment_text"
       t.string "attachment_url"
-      t.integer "likes_count", default: 0
-      t.integer "reposts_count", default: 0
-      t.datetime "created_at"
-      t.datetime "updated_at"
+      t.timestamps
       t.integer "attachment_id"
       t.integer "attachment_owner_id"
       t.string "attachment_title"
       t.integer "date"
       t.integer "copy_owner_id"
       t.integer "copy_post_id"
+      t.integer "reposts_count", default: 0
+      t.integer "comments_count", default: 0
+      t.integer "likes_count", default: 0
       t.integer "likes_age"
       t.float "likes_share"
+      t.float "closed_profiles"
     end
   end
 end
